@@ -1,0 +1,93 @@
+name: FillTheMines
+main: net.mahagon.fillthemines.FillTheMinesPlugin
+version: 0.1
+author: Mahagon
+desciption: Guess what?
+prefix: FTM
+depend: [WorldEdit]
+version: 0.0.3
+
+commands:
+   ftm:
+      description: Shows up FillTheMines commands.
+      usage: /ftm help for commandlist
+   ftm create:
+      description: Create a new mine region.
+      permission: ftm.create
+      usage: /ftm create <mine> <template> <refillonrestart> <rundaily>
+   ftm delete:
+      description: Delete a mine region.
+      permission: ftm.delete
+      usage: /ftm delete <mine>
+   ftm fill:
+      description: Fills up a mine region.
+      permission: ftm.fill
+      usage: /ftm fill <mine>
+   ftm list:
+      description: Lists all mine regions or templates.
+      permission: ftm.list
+      usage: /ftm list <mines/templates>
+   ftm info:
+      description: Can see information about mines.
+      permission: ftm.info
+      usage: /ftm info <mine>
+   ftm reload:
+      description: Reloads the ftm config.
+      permission: ftm.reload
+      usage: /ftm reload
+   ftm template:
+      description: Create/delete a template.
+      usage: ftm template <create/delete>
+      permission: ftm.template.*
+   ftm template create:
+      description: Create a template.
+      permission: ftm.template.create
+      usage: /ftm template create <mine> <itemid:itemsubid%percentage,itemid:itemsubid%percentage,itemid:itemsubid%percentage>
+   ftm template delete:
+      description: Delete a template.
+      permission: ftm.template.delete
+      usage: /ftm template delete <mine>
+
+permissions:
+   ftm.*:
+      description: Gives access to all ftm commands
+      default: op
+      children:
+         ftm.info: true
+         ftm.notify: true
+         ftm.create: true
+         ftm.delete: true
+         ftm.fill: true
+         ftm.list: true
+         ftm.template.create: true
+         ftm.template.delete: true
+   ftm.template.*:
+      default: op
+      description: Gives access to all template ftm commands
+      children:
+         ftm.template.create: true
+         ftm.template.delete: true
+   ftm.info:
+      description: Can see information about mines.
+      default: op
+   ftm.notify:
+      description: Can see ftm broadcasts.
+      default: false
+   ftm.create:
+      description: Create a mine region.
+      default: op
+   ftm.delete:
+      description: Delete a mine region.
+      default: op
+   ftm.fill:
+      description: Fills up a mine region.
+      default: op
+   ftm.list:
+      description: Lists all mine regions or templates.
+      default: op
+   ftm.template.create:
+      description: Create a template.
+      default: op
+   ftm.template.delete:
+      description: Delete a template.
+      default: op

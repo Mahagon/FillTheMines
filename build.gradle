@@ -1,0 +1,43 @@
+apply plugin: 'java'; apply plugin: 'idea'; apply plugin: 'eclipse'
+
+group = 'net.mahagon'
+archivesBaseName = 'FillTheMines'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+final def bukkitVersion = '1.12.2-R0.1-SNAPSHOT'
+final def worldEditVersion = '6.1.5'
+final def worldEditCoreVersion = '6.1.4-SNAPSHOT'
+
+
+compileJava.options.encoding = 'UTF-8'
+
+// gradle java_home issues
+//compileJava.options.fork = true
+//compileJava.options.forkOptions.executable =  'C:\\Program Files\\Java\\jdk-10.0.1\\bin\\javac.exe'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://maven.sk89q.com/repo/' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    compile group: 'org.spigotmc', name: 'spigot-api', version: bukkitVersion
+    compile group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: worldEditVersion
+    compile group: 'com.sk89q.worldedit', name: 'worldedit-core', version: worldEditCoreVersion
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+}
