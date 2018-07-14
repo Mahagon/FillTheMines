@@ -2,10 +2,10 @@ name: FillTheMines
 main: net.mahagon.fillthemines.FillTheMinesPlugin
 version: 0.1
 author: Mahagon
-desciption: Guess what?
+desciption: Daily mine filling
 prefix: FTM
 depend: [WorldEdit]
-version: 0.0.3
+version: 0.0.4
 
 commands:
    ftm:
