@@ -4,8 +4,6 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -25,10 +23,6 @@ public class WorldEditRegion {
             throw new IllegalArgumentException("You have to define a cuboid selection");
         }
         return new WorldEditRegion(selection);
-    }
-
-    public static WorldEditRegion fromCorners(World world, Location first, Location second) {
-        return new WorldEditRegion(new CuboidSelection(world, first, second));
     }
 
     /**
@@ -57,9 +51,4 @@ public class WorldEditRegion {
     private Selection getSelection() {
         return selection;
     }
-
-    public void setSelection(Selection selection) {
-        this.selection = selection;
-    }
-
 }

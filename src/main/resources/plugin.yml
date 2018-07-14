@@ -5,7 +5,7 @@ author: Mahagon
 desciption: Daily mine filling
 prefix: FTM
 depend: [WorldEdit]
-version: 0.0.4
+version: 0.0.5
 
 commands:
    ftm:

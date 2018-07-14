@@ -16,45 +16,40 @@ public class BlockEdit {
         final FileConfiguration config = FillTheMinesPlugin.getPlugin().getConfig();
         final int waittime = config.getInt("blockset.waittimeperrow") * 50; // ticks to ms
         Bukkit.getServer().getScheduler().runTaskAsynchronously(FillTheMinesPlugin.getPlugin(),
-                new Runnable() {
-                    @Override
-                    public void run() {
-
-                        final String[] templateBlocks = template.replaceAll("\\s+", "").split(",");
-                        // get max value for random > 1 = above 100%
-                        double lastNumber = 0;
-                        // Material , chance
-                        final String[][] blockList = new String[templateBlocks.length][2];
-                        // translate template string
-                        int i = 0;
-                        for (String templateBlock : templateBlocks) {
-                            String[] block = templateBlock.split("%");
-                            lastNumber += (Double.parseDouble(block[1]) / 100);
-                            blockList[i][0] = block[0];
-                            blockList[i][1] = Double.toString(lastNumber);
-                            i++;
+                () -> {
+                    final String[] templateBlocks = template.replaceAll("\\s+", "").split(",");
+                    // get max value for random > 1 = above 100%
+                    double lastNumber = 0;
+                    // Material , chance
+                    final String[][] blockList = new String[templateBlocks.length][2];
+                    // translate template string
+                    int i = 0;
+                    for (String templateBlock : templateBlocks) {
+                        String[] block = templateBlock.split("%");
+                        lastNumber += (Double.parseDouble(block[1]) / 100);
+                        blockList[i][0] = block[0];
+                        blockList[i][1] = Double.toString(lastNumber);
+                        i++;
+                    }
+                    final double fLastNumber = lastNumber; // addition of percentage
+                    for (int x = weCoordSel[0]; x <= weCoordSel[3]; x++) { // x of the cuboid
+                        final int fCurrentX = x; // current x
+                        final int fMaxX = weCoordSel[3]; // max X
+                        Bukkit.getServer().getScheduler()
+                                .scheduleSyncDelayedTask(FillTheMinesPlugin.getPlugin(), new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setBlocks(weCoordSel, world, template, fCurrentX, fMaxX, fLastNumber,
+                                                templateBlocks.length, blockList, mineName);
+                                    }
+                                });
+                        // waittime for less lagg
+                        try {
+                            Thread.sleep(waittime);
+                        } catch (InterruptedException e) {
+                            FillTheMinesStartupTask.setRunningState(false);
+                            e.printStackTrace();
                         }
-                        final double fLastNumber = lastNumber; // addition of percentage
-                        for (int x = weCoordSel[0]; x <= weCoordSel[3]; x++) { // x of the cuboid
-                            final int fCurrentX = x; // current x
-                            final int fMaxX = weCoordSel[3]; // max X
-                            Bukkit.getServer().getScheduler()
-                                    .scheduleSyncDelayedTask(FillTheMinesPlugin.getPlugin(), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            setBlocks(weCoordSel, world, template, fCurrentX, fMaxX, fLastNumber,
-                                                    templateBlocks.length, blockList, mineName);
-                                        }
-                                    });
-                            // waittime for less lagg
-                            try {
-                                Thread.sleep(waittime);
-                            } catch (InterruptedException e) {
-                                FillTheMinesStartupTask.setRunningState(false);
-                                e.printStackTrace();
-                            }
-                        }
-
                     }
                 });
     }
@@ -62,7 +57,6 @@ public class BlockEdit {
     /**
      * Fills a region with blocks sync
      */
-    @SuppressWarnings("deprecation")
     private static void setBlocks(int[] weCoordSel, World world, String template, int x, int lastX,
                                   double lastNumber, int templateBlocksCount, String[][] blockList, String mineName) {
         // set blocks in cuboid (one row)
@@ -71,22 +65,7 @@ public class BlockEdit {
                 double random = (Math.random() * lastNumber);
                 for (int i = 0; i <= templateBlocksCount; i++) {
                     if (random <= Double.parseDouble(blockList[i][1])) {
-                        String blockid = blockList[i][0];
-                        Byte blocksubid = 0;
-                        String[] block = blockList[i][0].split(":");
-                        if (block.length == 2) {
-                            blockid = block[0];
-                            blocksubid = Byte.parseByte(block[1]);
-                        }
-                        // SUBID compatibility
-                        if (blocksubid == 0) {
-                            world.getBlockAt(x, y, z)
-                                    .setType(Material.getMaterial(Material.matchMaterial(blockid).toString()));
-                        } else {
-                            world.getBlockAt(x, y, z).setTypeIdAndData(Material.matchMaterial(blockid).getId(),
-                                    blocksubid, false);
-                        }
-
+                        world.getBlockAt(x, y, z).setType(Material.matchMaterial(blockList[i][0]), false);
                         break;
                     }
                 }
