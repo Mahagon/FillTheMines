@@ -32,16 +32,13 @@ class FillTheMinesStartupTask {
                     }
                     // inform players
                     Bukkit.getServer().getScheduler()
-                            .scheduleSyncDelayedTask(FillTheMinesPlugin.getPlugin(), new Runnable() {
-                                @Override
-                                public void run() {
-                                    Bukkit.getServer()
-                                            .broadcastMessage(ChatColor.GOLD + "["
-                                                    + FillTheMinesPlugin.getPlugin().getName() + "] "
-                                                    + broadcast
-                                                    .replaceAll("%WAITTIME%", Integer.toString(waittimeRefill / 1000))
-                                                    .replaceAll("&([0-9a-f])", "\u00A7$1"));
-                                }
+                            .scheduleSyncDelayedTask(FillTheMinesPlugin.getPlugin(), () -> {
+                                Bukkit.getServer()
+                                        .broadcastMessage(ChatColor.GOLD + "["
+                                                + FillTheMinesPlugin.getPlugin().getName() + "] "
+                                                + broadcast
+                                                .replaceAll("%WAITTIME%", Integer.toString(waittimeRefill / 1000))
+                                                .replaceAll("&([0-9a-f])", "\u00A7$1"));
                             });
                     // waittime after warning
                     try {
